@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace FintechBackend.Models;
 
@@ -20,5 +21,6 @@ public class User
     public string Password { get; set; } = string.Empty;
 
     [Required]
+	[JsonIgnore]
     public string PasswordHash { get; set; } = string.Empty;
 }

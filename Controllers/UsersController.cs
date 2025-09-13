@@ -4,6 +4,7 @@ using FintechBackend.Models;
 using FintechBackend.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace FintechBackend.Controllers;
 
@@ -30,7 +31,7 @@ public class UserController(AppDbContext db) : ControllerBase
 	}
 
 	[HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] User updatedUser)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateUserDto updatedUser)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null) return NotFound();
@@ -49,4 +50,11 @@ public class UserController(AppDbContext db) : ControllerBase
         await _db.SaveChangesAsync();
         return NoContent();
     }
+}
+
+public class UpdateUserDto
+{
+    public string Name { get; set; } = string.Empty;
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
 }
