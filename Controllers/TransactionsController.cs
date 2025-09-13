@@ -52,6 +52,7 @@ public class TransactionsController(AppDbContext db) : ControllerBase
         if (transaction == null) return NotFound();
         transaction.UserId = updatedTransaction.UserId;
         transaction.Amount = updatedTransaction.Amount;
+        transaction.ProductId = updatedTransaction.ProductId;
         transaction.Status = updatedTransaction.Status;
         await _db.SaveChangesAsync();
         return Ok(transaction);
@@ -88,5 +89,6 @@ public class UpdateTransactionRequest
 {
     public long UserId { get; set; }
     public decimal Amount { get; set; }
+    public int ProductId { get; set; }
     public TransactionStatus Status { get; set; }
 }
