@@ -1,18 +1,18 @@
 using FintechBackend.Data;
 using FintechBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace FintechBackend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class TransactionsController : ControllerBase
+public class TransactionsController(AppDbContext db) : ControllerBase
 {
-    private readonly AppDbContext _db;
-
-    public TransactionsController(AppDbContext db) => _db = db;
+    private readonly AppDbContext _db = db;
 
     [HttpGet]
     public async Task<IActionResult> GetAllTransactions()

@@ -13,5 +13,12 @@ public class User
 	public string Name { get; set; } = string.Empty;
 
 	[EmailAddress]
-	public string? Email {  get; set; }
+	[Required]
+    public string Email {  get; set; } = string.Empty;
+
+	[NotMapped] // won't be saved directly to the database
+    public string Password { get; set; } = string.Empty;
+
+    [Required]
+    public string PasswordHash { get; set; } = string.Empty;
 }

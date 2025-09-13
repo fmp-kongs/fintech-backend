@@ -3,18 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using FintechBackend.Models;
 using FintechBackend.Data;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FintechBackend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class UserController(AppDbContext db) : ControllerBase
 {
-	private readonly AppDbContext _db;
-	public UserController(AppDbContext db) => _db = db;
+	private readonly AppDbContext _db = db;
 
-
-	[HttpGet]
+    [HttpGet]
 	public async Task<IActionResult> GetAll()
 	{
 		var users = await _db.Users.ToListAsync();
