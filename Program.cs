@@ -2,6 +2,7 @@ using FintechBackend.Data;
 using FintechBackend.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -104,9 +105,26 @@ using(var scope = app.Services.CreateScope())
 
     if (!db.Users.Any())
     {
+        var adminUserOptions = builder.Configuration.GetSection("AdminUser").Get<AdminUserOptions>();
+        if (adminUserOptions == null)
+            throw new InvalidOperationException("AdminUser section is missing in appsettings.json");
+
+        var passwordHasher = new PasswordHasher<User>();
+
+        var admin = new User
+        {
+            Name = adminUserOptions.Name,
+            Email = adminUserOptions.Email,
+            Role = adminUserOptions.Role
+        };
+        admin.PasswordHash = passwordHasher.HashPassword(admin, adminUserOptions.Password);
+
+
+        var user = new User { Name = "Alice", Email = "alice@fintech.com", Role = "User" };
+        user.PasswordHash = passwordHasher.HashPassword(user, "User@123");
         db.Users.AddRange(
-            new User { Name = "Alice", Email = "alice@example.com" },
-            new User { Name = "Bob", Email = "bob@example.com" }
+            admin,
+            user
         );
         db.SaveChanges();
     }

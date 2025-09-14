@@ -5,6 +5,8 @@ using FintechBackend.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 namespace FintechBackend.Controllers;
 
@@ -22,15 +24,26 @@ public class UserController(AppDbContext db) : ControllerBase
 		return Ok(users);
 	}
 
-	[HttpPost]
-	public async Task<IActionResult> Create(User user)
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+	public async Task<IActionResult> Create(RegisterDto registerDto)
 	{
-		_db.Users.Add(user);
+        var user = new User
+        {
+            Name = registerDto.Name,
+            Email = registerDto.Email,
+            Role = "User" // Default role
+        };
+
+        user.PasswordHash = new PasswordHasher<User>().HashPassword(user, registerDto.Password);
+
+        _db.Users.Add(user);
 		await _db.SaveChangesAsync();
 		return CreatedAtAction(nameof(GetAll), new { id = user.Id }, user);
 	}
 
-	[HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateUserDto updatedUser)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -41,6 +54,7 @@ public class UserController(AppDbContext db) : ControllerBase
         return Ok(user);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -50,6 +64,13 @@ public class UserController(AppDbContext db) : ControllerBase
         await _db.SaveChangesAsync();
         return NoContent();
     }
+}
+
+public class RegisterDto
+{
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }
 
 public class UpdateUserDto
