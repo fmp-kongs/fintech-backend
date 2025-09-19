@@ -4,9 +4,8 @@ using FintechBackend.Models;
 using FintechBackend.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using FintechBackend.DTOs;
 
 namespace FintechBackend.Controllers;
 
@@ -64,18 +63,4 @@ public class UserController(AppDbContext db) : ControllerBase
         await _db.SaveChangesAsync();
         return NoContent();
     }
-}
-
-public class RegisterDto
-{
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-}
-
-public class UpdateUserDto
-{
-    public string Name { get; set; } = string.Empty;
-    [EmailAddress]
-    public string Email { get; set; } = string.Empty;
 }

@@ -1,6 +1,6 @@
 using FintechBackend.Data;
+using FintechBackend.DTOs;
 using FintechBackend.Models;
-using FintechBackend.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -74,21 +74,4 @@ public class TransactionsController(AppDbContext db) : ControllerBase
         var transactions = await _db.Transactions.Where(t => t.UserId == userId).ToListAsync();
         return Ok(transactions);
     }
-}
-
-
-public class CreateTransactionRequest
-{
-    public long UserId { get; set; }
-    public decimal Amount { get; set; }
-    public int ProductId { get; set; }
-    public TransactionStatus Status { get; set; }
-}
-
-public class UpdateTransactionRequest
-{
-    public long UserId { get; set; }
-    public decimal Amount { get; set; }
-    public int ProductId { get; set; }
-    public TransactionStatus Status { get; set; }
 }

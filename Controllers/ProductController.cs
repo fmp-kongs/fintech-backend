@@ -1,4 +1,5 @@
 ﻿using FintechBackend.Data;
+using FintechBackend.DTOs;
 using FintechBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,18 +70,4 @@ public class ProductController(AppDbContext db) : ControllerBase
         await _db.SaveChangesAsync();
         return NoContent();
     }
-}
-
-public class CreateProductRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public decimal Price { get; set; }
-}
-
-public class UpdateProductRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public decimal Price { get; set; }
 }
